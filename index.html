@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mobilní kvíz – rozmnožovací soustava</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(180deg, #e8f0ff, #f7f7f7);
+  color: #1b1b1b;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #ffffffee;
+  backdrop-filter: blur(8px);
+  padding: 14px 16px;
+  box-shadow: 0 2px 10px #0001;
+}
+h1 {
+  font-size: 22px;
+  margin: 0 0 8px;
+}
+.progress-wrap {
+  height: 10px;
+  background: #ddd;
+  border-radius: 999px;
+  overflow: hidden;
+}
+#progress {
+  height: 100%;
+  width: 0%;
+  background: #4f7cff;
+  transition: width .2s;
+}
+main {
+  padding: 14px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  margin: 14px 0;
+  box-shadow: 0 4px 16px #00000018;
+}
+.qnum {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+h2 {
+  font-size: 20px;
+  line-height: 1.3;
+  margin: 0 0 14px;
+}
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 54px;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #e2e2e2;
+  border-radius: 14px;
+  font-size: 18px;
+  background: #fafafa;
+  cursor: pointer;
+}
+.choice input {
+  display: none;
+}
+.letter {
+  min-width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6ebff;
+  font-weight: bold;
+}
+.choice:has(input:checked) {
+  border-color: #4f7cff;
+  background: #eef3ff;
+}
+.actions {
+  position: sticky;
+  bottom: 0;
+  background: #ffffffee;
+  padding: 12px 14px;
+  box-shadow: 0 -2px 12px #0001;
+}
+button {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: 19px;
+  font-weight: bold;
+  background: #4f7cff;
+  color: white;
+}
+#result {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin: 16px 0;
+}
+.correct {
+  color: #137a2a;
+  font-weight: bold;
+}
+.wrong {
+  color: #c62828;
+  font-weight: bold;
+}
+.feedback {
+  margin: 10px 0 0;
+  font-size: 17px;
+}
+@media (max-width: 430px) {
+  h1 { font-size: 20px; }
+  h2 { font-size: 18px; }
+  .choice { font-size: 17px; }
+  main { padding: 10px; }
+  .card { padding: 15px; border-radius: 16px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Mobilní kvíz – rozmnožovací soustava</h1>
+  <div class="progress-wrap"><div id="progress"></div></div>
+</header>
+
+<main>
+  <p>Vyber u každé otázky jednu odpověď A, B nebo C.</p>
+  <form id="quiz">
+    
+    <section class="card" data-question="1">
+      <div class="qnum">Otázka 1 / 20</div>
+      <h2>Co umožňuje rozmnožovací soustava?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q1" value="A">
+          <span class="letter">A</span>
+          <span>dýchání</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q1" value="B">
+          <span class="letter">B</span>
+          <span>rozmnožování</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q1" value="C">
+          <span class="letter">C</span>
+          <span>trávení</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="2">
+      <div class="qnum">Otázka 2 / 20</div>
+      <h2>Co tvoří rozmnožovací soustavu?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q2" value="A">
+          <span class="letter">A</span>
+          <span>pohlavní orgány</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q2" value="B">
+          <span class="letter">B</span>
+          <span>kosti</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q2" value="C">
+          <span class="letter">C</span>
+          <span>plíce</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="3">
+      <div class="qnum">Otázka 3 / 20</div>
+      <h2>Co produkují vaječníky?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q3" value="A">
+          <span class="letter">A</span>
+          <span>spermie</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q3" value="B">
+          <span class="letter">B</span>
+          <span>vajíčka</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q3" value="C">
+          <span class="letter">C</span>
+          <span>hormony štěstí</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="4">
+      <div class="qnum">Otázka 4 / 20</div>
+      <h2>Co produkují varlata?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q4" value="A">
+          <span class="letter">A</span>
+          <span>spermie</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q4" value="B">
+          <span class="letter">B</span>
+          <span>vajíčka</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q4" value="C">
+          <span class="letter">C</span>
+          <span>krev</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="5">
+      <div class="qnum">Otázka 5 / 20</div>
+      <h2>Jak se nazývá spojení vajíčka a spermie?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q5" value="A">
+          <span class="letter">A</span>
+          <span>puberta</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q5" value="B">
+          <span class="letter">B</span>
+          <span>oplození</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q5" value="C">
+          <span class="letter">C</span>
+          <span>menstruace</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="6">
+      <div class="qnum">Otázka 6 / 20</div>
+      <h2>Co vzniká po oplození?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q6" value="A">
+          <span class="letter">A</span>
+          <span>zárodek</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q6" value="B">
+          <span class="letter">B</span>
+          <span>kost</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q6" value="C">
+          <span class="letter">C</span>
+          <span>vousy</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="7">
+      <div class="qnum">Otázka 7 / 20</div>
+      <h2>Kde se vyvíjí zárodek?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q7" value="A">
+          <span class="letter">A</span>
+          <span>v plicích</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q7" value="B">
+          <span class="letter">B</span>
+          <span>v těle matky</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q7" value="C">
+          <span class="letter">C</span>
+          <span>v žaludku</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="8">
+      <div class="qnum">Otázka 8 / 20</div>
+      <h2>Jak dlouho trvá vývoj dítěte?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q8" value="A">
+          <span class="letter">A</span>
+          <span>3 měsíce</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q8" value="B">
+          <span class="letter">B</span>
+          <span>9 měsíců</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q8" value="C">
+          <span class="letter">C</span>
+          <span>12 měsíců</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="9">
+      <div class="qnum">Otázka 9 / 20</div>
+      <h2>Jaký je stav pohlavních orgánů v dětství?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q9" value="A">
+          <span class="letter">A</span>
+          <span>nevyvinuté</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q9" value="B">
+          <span class="letter">B</span>
+          <span>úplně vyvinuté</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q9" value="C">
+          <span class="letter">C</span>
+          <span>neexistují</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="10">
+      <div class="qnum">Otázka 10 / 20</div>
+      <h2>Jak se nazývá období dospívání?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q10" value="A">
+          <span class="letter">A</span>
+          <span>menstruace</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q10" value="B">
+          <span class="letter">B</span>
+          <span>puberta</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q10" value="C">
+          <span class="letter">C</span>
+          <span>oplození</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="11">
+      <div class="qnum">Otázka 11 / 20</div>
+      <h2>Co řídí pubertu?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q11" value="A">
+          <span class="letter">A</span>
+          <span>hormony</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q11" value="B">
+          <span class="letter">B</span>
+          <span>zuby</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q11" value="C">
+          <span class="letter">C</span>
+          <span>svaly</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="12">
+      <div class="qnum">Otázka 12 / 20</div>
+      <h2>Co začíná u dívek v pubertě?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q12" value="A">
+          <span class="letter">A</span>
+          <span>menstruace</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q12" value="B">
+          <span class="letter">B</span>
+          <span>růst vousů</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q12" value="C">
+          <span class="letter">C</span>
+          <span>hlubší hlas</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="13">
+      <div class="qnum">Otázka 13 / 20</div>
+      <h2>Co roste chlapcům na obličeji?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q13" value="A">
+          <span class="letter">A</span>
+          <span>vlasy</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q13" value="B">
+          <span class="letter">B</span>
+          <span>vousy</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q13" value="C">
+          <span class="letter">C</span>
+          <span>nehty</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="14">
+      <div class="qnum">Otázka 14 / 20</div>
+      <h2>Jaký hlas mají muži v dospělosti?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q14" value="A">
+          <span class="letter">A</span>
+          <span>vyšší hlas</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q14" value="B">
+          <span class="letter">B</span>
+          <span>hlubší hlas</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q14" value="C">
+          <span class="letter">C</span>
+          <span>stejný jako děti</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="15">
+      <div class="qnum">Otázka 15 / 20</div>
+      <h2>Jaké rysy mají ženy v dospělosti?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q15" value="A">
+          <span class="letter">A</span>
+          <span>jemnější rysy</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q15" value="B">
+          <span class="letter">B</span>
+          <span>vousy</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q15" value="C">
+          <span class="letter">C</span>
+          <span>hlubší hlas</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="16">
+      <div class="qnum">Otázka 16 / 20</div>
+      <h2>Jak se nazývají pohlavní buňky?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q16" value="A">
+          <span class="letter">A</span>
+          <span>vajíčko a spermie</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q16" value="B">
+          <span class="letter">B</span>
+          <span>kost a sval</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q16" value="C">
+          <span class="letter">C</span>
+          <span>srdce a plíce</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="17">
+      <div class="qnum">Otázka 17 / 20</div>
+      <h2>Co je menstruace?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q17" value="A">
+          <span class="letter">A</span>
+          <span>uvolňování vajíčka</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q17" value="B">
+          <span class="letter">B</span>
+          <span>růst vousů</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q17" value="C">
+          <span class="letter">C</span>
+          <span>spojení buněk</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="18">
+      <div class="qnum">Otázka 18 / 20</div>
+      <h2>Proč je rozmnožování důležité?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q18" value="A">
+          <span class="letter">A</span>
+          <span>pro zachování života</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q18" value="B">
+          <span class="letter">B</span>
+          <span>pro běhání</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q18" value="C">
+          <span class="letter">C</span>
+          <span>pro dýchání</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="19">
+      <div class="qnum">Otázka 19 / 20</div>
+      <h2>Jak vzniká nový život?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q19" value="A">
+          <span class="letter">A</span>
+          <span>spojením buněk</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q19" value="B">
+          <span class="letter">B</span>
+          <span>jídlem</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q19" value="C">
+          <span class="letter">C</span>
+          <span>spánkem</span>
+        </label></div>
+    </section>
+    
+    <section class="card" data-question="20">
+      <div class="qnum">Otázka 20 / 20</div>
+      <h2>Kolik měsíců trvá těhotenství?</h2>
+      <div class="choices">
+        <label class="choice">
+          <input type="radio" name="q20" value="A">
+          <span class="letter">A</span>
+          <span>6 měsíců</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q20" value="B">
+          <span class="letter">B</span>
+          <span>9 měsíců</span>
+        </label>
+
+        <label class="choice">
+          <input type="radio" name="q20" value="C">
+          <span class="letter">C</span>
+          <span>11 měsíců</span>
+        </label></div>
+    </section>
+    
+  </form>
+  <div id="result"></div>
+</main>
+
+<div class="actions">
+  <button type="button" onclick="checkQuiz()">Vyhodnotit kvíz</button>
+</div>
+
+<script>
+const answers = {"q1": "B", "q2": "A", "q3": "B", "q4": "A", "q5": "B", "q6": "A", "q7": "B", "q8": "B", "q9": "A", "q10": "B", "q11": "A", "q12": "A", "q13": "B", "q14": "B", "q15": "A", "q16": "A", "q17": "A", "q18": "A", "q19": "A", "q20": "B"};
+const total = Object.keys(answers).length;
+
+document.querySelectorAll('input[type="radio"]').forEach(input => {
+  input.addEventListener('change', updateProgress);
+});
+
+function updateProgress() {
+  let answered = 0;
+  for (let i = 1; i <= total; i++) {
+    if (document.querySelector(`input[name="q${i}"]:checked`)) answered++;
+  }
+  document.getElementById("progress").style.width = (answered / total * 100) + "%";
+}
+
+function checkQuiz() {
+  let score = 0;
+  document.querySelectorAll(".feedback").forEach(e => e.remove());
+
+  for (let i = 1; i <= total; i++) {
+    const q = "q" + i;
+    const picked = document.querySelector(`input[name="${q}"]:checked`);
+    const card = document.querySelector(`section[data-question="${i}"]`);
+    const fb = document.createElement("p");
+    fb.className = "feedback";
+
+    if (picked && picked.value === answers[q]) {
+      score++;
+      fb.innerHTML = '<span class="correct">Správně ✅</span>';
+    } else {
+      fb.innerHTML = `<span class="wrong">Špatně ❌ Správná odpověď: ${answers[q]}</span>`;
+    }
+    card.appendChild(fb);
+  }
+
+  document.getElementById("result").innerText = `Výsledek: ${score} / ${total}`;
+  document.getElementById("result").scrollIntoView({ behavior: "smooth" });
+}
+</script>
+</body>
+</html>
